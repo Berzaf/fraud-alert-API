@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-suite.xml" />
+	<munit:test name="craft-fraud-alert-serviceFlow-test" doc:id="eb9acaf0-7673-4e22-8783-ed0962c2ca6f" >
+		<munit:behavior >
+			<munit-tools:spy doc:name="Spy Validate-coustomer-phone-format" doc:id="6506e322-51fb-42fb-94ab-b299c9d3a751" processor="validation:matches-regex">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="755af92e-94d6-475f-bdf7-8db0060ccec6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="d7630557-3c17-42a5-bd0e-e9700e75a96a" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload
+---
+spy_assert_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="98127a0c-cafa-42ca-808e-839226a076ae" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload1
+---
+spy_assert_payload1::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy validateCoustomer-phoneNum-with3rd-party-API" doc:id="4dd90457-a6c7-4395-9a76-69ff24463552" processor="http:request">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bfb5127d-67e6-4c93-a61c-d929ed477df3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="1aff7c3a-e673-48ac-911c-6402e1d92ad5" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload2
+---
+spy_assert_payload2::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="41d6d7fe-90cd-417f-b637-41e379db1fe4" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload3
+---
+spy_assert_payload3::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Insert-Invalid-phoneNum" doc:id="f036f2fd-71e9-4183-bc27-05d7d328e9f4" processor="db:insert">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a10baf9f-879b-4c7c-b6c9-ff4556daf7b3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="d2b5f23a-5821-4c00-a0a4-1050f9f08b44" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload4
+---
+spy_assert_payload4::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="df520004-71fd-4154-bc0f-dc9b95618ffa" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload5
+---
+spy_assert_payload5::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Transform Message" doc:id="ae5173a0-ee76-4c36-ac67-4a34620cc3f9" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="29cd3672-8558-4b28-b495-03fd2bfa80e7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="2db09d13-9a66-4492-bb7b-de597bfe4d55" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload6
+---
+spy_assert_payload6::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="8e5bf3c8-b2c9-48b1-aad2-cc82d396b52a" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload7
+---
+spy_assert_payload7::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit-tools:spy doc:name="Spy Transform Message" doc:id="7a798f35-a3b2-4cbe-bea9-40e6d3a77bdb" processor="ee:transform">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2ed3def7-51e1-44f2-8258-604e5f587836" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:before-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="497cba2f-0b3f-4f19-8496-cd764bc873d1" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload8
+---
+spy_assert_payload8::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:before-call>
+				<munit-tools:after-call >
+					<munit-tools:assert doc:name="Assert payload" doc:id="39914188-a759-461c-ab9f-2047c492a923" message="The payload does not match">
+						<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::spy_assert_payload9
+---
+spy_assert_payload9::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+					</munit-tools:assert>
+				</munit-tools:after-call>
+			</munit-tools:spy>
+			<munit:set-event doc:name="Set Input" doc:id="081e3a61-6eb9-418f-81a9-b6799a0276f8" >
+				<munit:payload value="#[readUrl('classpath://craftfraudalertserviceFlowtest\set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://craftfraudalertserviceFlowtest\set-event_attributes.dwl')]" />
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to craft-fraud-alert-serviceFlow" doc:id="a4fb6045-d858-403b-98b7-5623b3470095" name="craft-fraud-alert-serviceFlow"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="8c5742a4-cde1-42f0-b5d4-d0925b981960" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import craftfraudalertserviceFlowtest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+			<munit-tools:verify-call doc:name="Verify Validate-coustomer-phone-format" doc:id="05c836c6-d626-47a8-9673-b75d4b8d9011" processor="validation:matches-regex" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="755af92e-94d6-475f-bdf7-8db0060ccec6" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify validateCoustomer-phoneNum-with3rd-party-API" doc:id="d191b2d6-7a8d-4a1e-a66c-6286194cce92" processor="http:request" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="bfb5127d-67e6-4c93-a61c-d929ed477df3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Insert-Invalid-phoneNum" doc:id="b97f28ff-4db2-4cbe-bd05-517ef13ef01f" processor="db:insert" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="a10baf9f-879b-4c7c-b6c9-ff4556daf7b3" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="3d45bc9f-0f81-42f5-b73b-14bdc2538f5d" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="29cd3672-8558-4b28-b495-03fd2bfa80e7" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+			<munit-tools:verify-call doc:name="Verify Transform Message" doc:id="521e008f-69d4-404e-93b7-bf48db412186" processor="ee:transform" times="1">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="2ed3def7-51e1-44f2-8258-604e5f587836" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:verify-call>
+		</munit:validation>
+	</munit:test>
+
+
+</mule>

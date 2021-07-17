@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd">
+
+	<flow name="craft-fraud-alert-serviceFlow" doc:id="96265e56-5916-46b7-9671-46a1a32a6deb" >
+		<http:listener doc:name="Listener" doc:id="a572895d-9278-4f32-b039-83f2f900be5b" config-ref="HTTP_Listener_config" path="${secure::http.path}"/>
+		<logger level="INFO" doc:name="phoneVerfication-Process-started" doc:id="27aa4007-d31e-4bf3-8de0-9316da6f482c" />
+		<validation:matches-regex doc:name="Validate-coustomer-phone-format" doc:id="755af92e-94d6-475f-bdf7-8db0060ccec6" value="#[attributes.queryParams.phoneNumber]" regex="^[0-9]{11}$"/>
+		<http:request method="GET" doc:name="validateCoustomer-phoneNum-with3rd-party-API" doc:id="bfb5127d-67e6-4c93-a61c-d929ed477df3" config-ref="HTTP_Request_configuration" path="${secure::http.path}">
+			<http:query-params ><![CDATA[#[{
+	number : attributes.queryParams.phoneNumber,
+  	access_key : p('access_key')
+  }]]]></http:query-params>
+		</http:request>
+		<ee:transform doc:name="Transform Message" doc:id="29cd3672-8558-4b28-b495-03fd2bfa80e7" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="phoneVerification-process-completed" doc:id="f6a802e7-8787-4901-9a65-f5d8708d44fb" message="valid number" />
+		<choice doc:name="Choice" doc:id="f520d0c2-9f9f-4ae4-9f07-852cae5d9e9d" >
+			<when expression="#[payload.valid == true]">
+				<db:insert doc:name="Insert-Valid-phoneNum" doc:id="70f2cff1-7760-4240-9e37-4570331a8d16" config-ref="Database_Config">
+					<db:sql ><![CDATA[insert into validPhone(phoneNumber,country)
+value(:phoneNumber, :country)]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	phoneNumber: payload.number,
+	country: payload.country_name
+}]]]></db:input-parameters>
+				</db:insert>
+			</when>
+			<otherwise >
+				<db:insert doc:name="Insert-Invalid-phoneNum" doc:id="a10baf9f-879b-4c7c-b6c9-ff4556daf7b3" config-ref="Database_Config">
+					<db:sql ><![CDATA[insert into invalidPhone(phoneNumber,country)
+value(:phoneNumber, :country)]]></db:sql>
+					<db:input-parameters ><![CDATA[#[{
+	phoneNumber: payload.number,
+	country: payload.country_name
+	}]]]></db:input-parameters>
+				</db:insert>
+			</otherwise>
+		</choice>
+		<ee:transform doc:name="Transform Message" doc:id="2ed3def7-51e1-44f2-8258-604e5f587836" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "inserted successfuly"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<error-handler >
+			<on-error-propagate enableNotifications="true" logException="true" doc:name="On Error Propagate" doc:id="5f551c4a-ec41-49d7-b1ec-6e61b180d81f" >
+				<ee:transform doc:name="Transform Message" doc:id="9e10c0df-6523-4a60-a4df-c59de1cda9c5" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	message: "Invalid Phone Number Format"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+</mule>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="332f9ca9-6c69-4581-9a26-628ce48549e7" >
+	<http:listener-connection host="0.0.0.0" port="${secure::http.port}" />
+	</http:listener-config>
+	<db:config name="Database_Config" doc:name="Database Config" doc:id="5818121d-d888-4d9c-b03a-70566a1a57a4" >
+	<db:my-sql-connection host="${secure::db.host}" port="${secure::db.port}" user="${secure::db.user}" password="${secure::db.password}" database="${secure::db.name}"/>
+	</db:config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="832c5400-f38a-4267-a9d5-86bdde30c932" basePath="/api">
+	<http:request-connection host="${secure::http.host.numverify}" />
+	</http:request-config>
+	<secure-properties:config name="Secure_Properties_Config" doc:name="Secure Properties Config" doc:id="a7dac502-4292-4131-a5bf-3a41eb334d93" file="${env}.yaml" key="${enc.key}" >
+		<secure-properties:encrypt algorithm="DES" />
+	</secure-properties:config>
+	<configuration-properties doc:name="Configuration properties" doc:id="d02ba59f-3820-4b77-8c95-2262cd3721c4" file="${env}.yaml" />
+	<global-property doc:name="Global Property" doc:id="17b5c2d2-36a1-48ed-9f1d-c1b61b4375f1" name="env" value="dev" />
+</mule>
